@@ -43,6 +43,12 @@ oppo软件商店：http://store.oppomobile.com/product/category/12_7_1.html, htt
 
 LetvStore: http://www.letvstore.com/appIndex.html, http://www.letvstore.com/appClass.html?categoryId=25
 
+优亿市场：http://www.eoemarket.com/soft/1_hot_unofficial_hasad_1_1.html
+
+机锋市场：http://apk.gfan.com/apps_7_1_1.html
+
+魅族应用商店：http://app.meizu.com/apps/public/category/1/all/feed/index/0/18
+
 
 ----
 国外：
