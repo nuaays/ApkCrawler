@@ -45,5 +45,8 @@ LetvStore: http://www.letvstore.com/appIndex.html, http://www.letvstore.com/appC
 
 
 ----
+国外：
 
-Google Play：
+Google Play：https://play.google.com/store
+
+SOC.io： http://soc.io/apps/!topDownloaded
