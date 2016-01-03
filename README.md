@@ -35,6 +35,15 @@ Android应用商店：
 
 25PP:http://android.25pp.com/software
 
+中国移动应用商场： http://mm.10086.cn/android/software
+
+oppo软件商店：http://store.oppomobile.com/product/category/12_7_1.html, http://m.store.oppomobile.com/rank/app.html
+
+9号安卓： http://www.9ht.com/pc/13_1.html
+
+LetvStore: http://www.letvstore.com/appIndex.html, http://www.letvstore.com/appClass.html?categoryId=25
+
+
 ----
 
 Google Play：
