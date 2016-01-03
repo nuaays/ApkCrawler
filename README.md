@@ -56,3 +56,6 @@ LetvStore: http://www.letvstore.com/appIndex.html, http://www.letvstore.com/appC
 Google Play：https://play.google.com/store
 
 SOC.io： http://soc.io/apps/!topDownloaded
+
+
+Aptoide: http://www.aptoide.com/page/apps
