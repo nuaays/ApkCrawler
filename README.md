@@ -24,6 +24,9 @@ Android应用商店：
 
 安智市场：http://www.anzhi.com/list_1_1_hot.html
 
+拇指玩安卓游戏: http://www.muzhiwan.com/top/rank.html
+
+
 华为应用市场：http://a.vmall.com/index/hot, http://appstore.huawei.com/soft/list
 
 网易应用中心：http://m.163.com/android/top.html
