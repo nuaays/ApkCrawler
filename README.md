@@ -20,6 +20,9 @@ Android应用商店：
 
 小米应用商店：http://app.mi.com/topList
 
+安卓市场： http://apk.hiapk.com/apps
+
+
 安卓超市：http://android.gamedog.cn/list_soft_0_0_0_0_hot_0.html
 
 安智市场：http://www.anzhi.com/list_1_1_hot.html
