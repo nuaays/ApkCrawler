@@ -22,8 +22,11 @@ Android应用商店：
 
 安卓市场： http://apk.hiapk.com/apps
 
+当乐网： http://android.d.cn/software/， http://android.d.cn/game/
+
 
 安卓超市：http://android.gamedog.cn/list_soft_0_0_0_0_hot_0.html
+
 
 安智市场：http://www.anzhi.com/list_1_1_hot.html
 
