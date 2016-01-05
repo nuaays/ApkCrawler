@@ -59,6 +59,10 @@ LetvStore: http://www.letvstore.com/appIndex.html, http://www.letvstore.com/appC
 魅族应用商店：http://app.meizu.com/apps/public/category/1/all/feed/index/0/18
 
 
+
+沙发网： http://app.shafa.com/hot， http://app.shafa.com/list/app?sort_by=downloads
+
+
 ----
 国外：
 
