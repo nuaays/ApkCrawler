@@ -1,4 +1,4 @@
-全部软件：http://android.myapp.com/myapp/cate/appList.htm?orgame=1&categoryId=0&pageSize=20&pageContext=100
+全部软件： http://android.myapp.com/myapp/cate/appList.htm?orgame=1&categoryId=0&pageSize=20&pageContext=100
 
 
 腾讯软件： http://android.myapp.com/myapp/category.htm?orgame=1&categoryId=-10
