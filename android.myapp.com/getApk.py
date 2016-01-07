@@ -101,9 +101,8 @@ def write2file(filename, requestshandle):
         with open(filename, "wb+") as fp:
             fp.write(requestshandle.content)
 
-if __name__ == "__main__":
-	print "XXX"
-	appwebpageurl="http://android.myapp.com/myapp/cate/appList.htm?orgame=1&categoryId=103&pageSize=20&pageContext=43"
+
+def download(appwebpageurl):
 	for l in getURLContent(appwebpageurl).split("pkgName\":")[1:]:
 		#print l
 		array=l.split(",")
@@ -144,3 +143,12 @@ if __name__ == "__main__":
 		#file(apkname_en, 'wb').write(urllib2.urlopen(apkdownload).read())
 	#
 	#write2file('AcFun', getURL('http://dd.myapp.com/16891/2234C387A04515252915D42D016BDF58.apk?fsname=tv.acfundanmaku.video_4.1.0_180.apk'))
+
+if __name__ == "__main__":
+	print "XXX"
+	#appwebpageurl="http://android.myapp.com/myapp/cate/appList.htm?orgame=1&categoryId=103&pageSize=20&pageContext=43"
+	for i in [103,101,122,102,112,106,104,110,115,119,111,107,118,108,100,114,117,109,105,113,116]:
+		for j in [43,69,93,100]:
+			appwebpageurl="http://android.myapp.com/myapp/cate/appList.htm?orgame=1&categoryId=%d&pageSize=20&pageContext=%d" % (i, j)
+			print appwebpageurl
+			download(appwebpageurl)
