@@ -121,8 +121,15 @@ def getApksFromOneWebPage(pageurl="http://zhushou.360.cn/list/index/cid/1", cata
 	app_infodict={}
 
 	content = getURLContent(pageurl)
+	try:
+		appsinfoline = [line for line in content.split("\n") if "sid=" in line][0].strip()
+	except Exception, e:
+		print e
+		print pageurl
+		print content
+		return app_infodict
 
-	appsinfoline = [line for line in content.split("\n") if "sid=" in line][0].strip()
+	#
 	appsinfo = appsinfoline.split("<li>")
 	for appinfo in appsinfo:
 		appinfoarray = appinfo.split("href=\"")[-1].split("&")
@@ -165,6 +172,9 @@ def getApksFromOneWebPage(pageurl="http://zhushou.360.cn/list/index/cid/1", cata
 			#
 			#
 			app_infodict[app_softid] = {"name":app_name, "softid":app_softid, "catagory":app_catagory, "url":app_url, "icon":app_icon, "apk":app_apk_url, "apksize":app_size, "downloadcount":app_downloadcount}
+
+			#download icon
+			write2file(app_softid+".png", getURL(app_icon))
 		except Exception, e:
 			print e
 
@@ -176,7 +186,9 @@ def getApksFromOneWebPage(pageurl="http://zhushou.360.cn/list/index/cid/1", cata
 
 
 if __name__ == "__main__":
-	zhoushou360 ={"全部":1, "系统安全":11,"通讯社交":12,"影音视听":14,"新闻阅读":15,"生活休闲":16,"主题壁纸":18,"办公商务":17,"摄影摄像":102228,"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
+	#zhoushou360 ={"全部":1, "系统安全":11,"通讯社交":12,"影音视听":14,"新闻阅读":15,"生活休闲":16,"主题壁纸":18,"办公商务":17,"摄影摄像":102228,"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
+	zhoushou360 ={"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
+	#"摄影摄像":102228,
 
 
 	app_info_dict_summary = {}
@@ -188,7 +200,7 @@ if __name__ == "__main__":
 		for webpagenum in xrange(1,51):
 			webpageurl = url_pattern % (catagorynum ,webpagenum)
 			print webpageurl
-			app_infodict = getApksFromOneWebPage(webpageurl, webpagenum)
+			app_infodict = getApksFromOneWebPage(webpageurl, catagorynum)
 			app_info_dict_summary = dict(app_info_dict_summary)
 			app_info_dict_summary.update(app_infodict)
 			print len(app_info_dict_summary)
