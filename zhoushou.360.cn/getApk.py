@@ -174,7 +174,7 @@ def getApksFromOneWebPage(pageurl="http://zhushou.360.cn/list/index/cid/1", cata
 			app_infodict[app_softid] = {"name":app_name, "softid":app_softid, "catagory":app_catagory, "url":app_url, "icon":app_icon, "apk":app_apk_url, "apksize":app_size, "downloadcount":app_downloadcount}
 
 			#download icon
-			write2file(app_softid+".png", getURL(app_icon))
+			write2file("icon/"+app_softid+".png", getURL(app_icon))
 		except Exception, e:
 			print e
 
@@ -186,8 +186,8 @@ def getApksFromOneWebPage(pageurl="http://zhushou.360.cn/list/index/cid/1", cata
 
 
 if __name__ == "__main__":
-	#zhoushou360 ={"全部":1, "系统安全":11,"通讯社交":12,"影音视听":14,"新闻阅读":15,"生活休闲":16,"主题壁纸":18,"办公商务":17,"摄影摄像":102228,"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
-	zhoushou360 ={"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
+	zhoushou360 ={"全部":1, "系统安全":11,"通讯社交":12,"影音视听":14,"新闻阅读":15,"生活休闲":16,"主题壁纸":18,"办公商务":17,"摄影摄像":102228,"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
+	#zhoushou360 ={"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
 	#"摄影摄像":102228,
 
 
