@@ -1,0 +1,62 @@
+﻿
+
+www.wandoujia.com/top/app
+
+http://apps.wandoujia.com/api/v1/apps?type=weeklytopapp&max=12&start=24&opt_fields=stat.weeklyStr,likesCount,reason,ad,title,packageName,apks.size,icons.px68,apks.superior,installedCountStr,snippet,editorComment,apks.versionCode,tags.*,trusted,categories.*&callback=jQuery183042728075937896726_1452520530460&_=1452520539028
+
+http://apps.wandoujia.com/api/v1/apps?type=weeklytopapp&max=12&start=36&opt_fields=stat.weeklyStr,likesCount,reason,ad,title,packageName,apks.size,icons.px68,apks.superior,installedCountStr,snippet,editorComment,apks.versionCode,tags.*,trusted,categories.*&callback=jQuery183042728075937896726_1452520530460&_=1452520563253
+
+http://apps.wandoujia.com/api/v1/apps?ads_count=0&tag=%E8%A7%86%E9%A2%91&max=12&start=60&opt_fields=apps.likesCount,apps.reason,apps.ad,apps.title,apps.packageName,apps.apks.size,apps.icons.px68,apps.apks.superior,apps.installedCountStr,apps.snippet,apps.editorComment,apps.apks.versionCode,apps.trusted&callback=jQuery18309321579282729505_1452520601719&_=1452520615291
+
+http://apps.wandoujia.com/api/v1/apps?ads_count=0&tag=%E8%A7%86%E9%A2%91&max=12&start=48&opt_fields=apps.likesCount,apps.reason,apps.ad,apps.title,apps.packageName,apps.apks.size,apps.icons.px68,apps.apks.superior,apps.installedCountStr,apps.snippet,apps.editorComment,apps.apks.versionCode,apps.trusted&callback=jQuery18309321579282729505_1452520601719&_=1452520613796
+
+http://apps.wandoujia.com/api/v1/apps?ads_count=0&tag=%E8%A7%86%E9%A2%91&max=12&start=756&opt_fields=apps.likesCount,apps.reason,apps.ad,apps.title,apps.packageName,apps.apks.size,apps.icons.px68,apps.apks.superior,apps.installedCountStr,apps.snippet,apps.editorComment,apps.apks.versionCode,apps.trusted&callback=jQuery18309321579282729505_1452520601719&_=1452521395128
+
+
+
+
+
+
+
+
+视频
+http://apps.wandoujia.com/tag/%E8%A7%86%E9%A2%91?page=1
+http://apps.wandoujia.com/tag/%E8%A7%86%E9%A2%91?page=5
+http://apps.wandoujia.com/tag/%E8%A7%86%E9%A2%91?page=14
+
+音乐
+http://apps.wandoujia.com/tag/%E9%9F%B3%E4%B9%90?page=1
+http://apps.wandoujia.com/tag/%E9%9F%B3%E4%B9%90?page=11
+
+
+
+width="68" height="68" alt="网易云音乐" class="icon"
+href = /apps/com.netease.cloudmusic?token=GFtREtPWsnxfojmQqFUrVrlkseWzDZsVYSksITrT2OmBxzpOKKvLCxhMHsFEhvwuOGqAzYyVfkrWMW-9cGl-qg&amp;adsPos=dynamicPos%2Fmobile%2Fmusic/0&amp;source=&amp;sid=27a2884b13524bee8a4dca2873fd1eaf1452522962246&amp;sToken=wNOCgq7FetInL9Qf1z4FMJi7hk8Me1eiKHpLMRY9vR7P19fjiYNmglAnScu6xDgmxFapS9-KxE3s1BD6RivIPg&amp;bucketId=bi-plutus-cnc7.hlg01.wandoujia.com&amp;testTag=plutus&amp;adwordId=7&amp;pn=com.netease.cloudmusic&amp;bid=1131596&amp;isAds=true&amp;pos=t%2Fapps%2Fcategories%2F%E9%9F%B3%E4%B9%90%2FsuperiorFirst
+
+<a class="page-item current" href="http://apps.wandoujia.com/tag/%E9%9F%B3%E4%B9%90?navType=app&pos=w/tag/appnav&page=1">1</a>
+<a class="page-item" href="http://apps.wandoujia.com/tag/%E9%9F%B3%E4%B9%90?navType=app&pos=w/tag/appnav&page=11">11</a>
+<a class="page-item next-page " href="http://apps.wandoujia.com/tag/%E9%9F%B3%E4%B9%90?navType=app&pos=w/tag/appnav&page=2">下一页</a>  
+
+
+
+
+
+
+GET /api/v1/apps?ads_count=0&tag=%E8%A7%86%E9%A2%91&max=12&start=756&opt_fields=apps.likesCount,apps.reason,apps.ad,apps.title,apps.packageName,apps.apks.size,apps.icons.px68,apps.apks.superior,apps.installedCountStr,apps.snippet,apps.editorComment,apps.apks.versionCode,apps.trusted&callback=jQuery18309321579282729505_1452520601719&_=1452521395128 HTTP/1.1
+Host: apps.wandoujia.com
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://www.wandoujia.com/tag/%E8%A7%86%E9%A2%91
+Cookie: _ga=GA1.2.547995142.1452520047; Hm_lvt_c680f6745efe87a8fabe78e376c4b5f9=1452520047; Hm_lpvt_c680f6745efe87a8fabe78e376c4b5f9=1452520602; _gat=1
+Connection: keep-alive
+
+
+
+
+
+
+
+
+
