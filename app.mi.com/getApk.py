@@ -10,8 +10,6 @@ from bs4 import BeautifulSoup
 # http://app.mi.com/topList?page=1
 # http://app.mi.com/topList?page=42
 
-
-
 USER_AGENTS = (
     "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_7_0; en-US) AppleWebKit/534.21 (KHTML, like Gecko) Chrome/11.0.678.0 Safari/534.21",
     "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)",
@@ -41,7 +39,7 @@ def getURLContent(url='http://app.mi.com/topList?page=1'):
         print e
         return None
     else:
-    	print r.encoding
+        print r.encoding
         return r.content
 
 def getURL(url):
@@ -79,60 +77,93 @@ def append2file(filename, string):
 
 
 def fetchApkinfoFromWebpage(weburl="http://app.mi.com/topList?page=1"):
- 	apklist = []
- 	html_doc = getURLContent(weburl)
-	soup = BeautifulSoup(html_doc, from_encoding="utf-8") 
-	for item in soup.findAll(attrs={"class":"applist"})[0]:
-		item_soup = BeautifulSoup(str(item))
-		apk_icon = apk_name = item_soup.find_all('img')[0].get('data-src')
-		apk_name = item_soup.find_all('h5')[0].get_text() #item_soup.find_all('a')[-2].get_text() #item_soup.find_all('h5')[0].get_text() ##apk_name = item_soup.find_all('img')[0].get('alt').encode('utf-8')
-		apk_webpage = "http://app.mi.com" + item_soup.find_all('a')[-1].get('href')
-		print apk_name, apk_webpage, apk_icon
-		apkstring = "%s|%s|%s" % (apk_name, apk_webpage, apk_icon)
-		apklist.append(apkstring)
-		#http://f5.market.mi-img.com/download/AppStore/044e54cd2ffb22f2f87baf3be3bd41255a543b33f/com.qiyi.video.apk
-	#print len(apklist)
- 	return apklist
+    apklist = []
+    html_doc = getURLContent(weburl)
+    soup = BeautifulSoup(html_doc, from_encoding="utf-8") 
+    for item in soup.findAll(attrs={"class":"applist"})[0]:
+        #print item
+        item_soup = BeautifulSoup(str(item))
+        #http://file.market.xiaomi.com/thumbnail/PNG/l62/AppStore/0a4e5f4d25ff24f2237ba83be3dd43205cbf1b5b4
+        #http://file.market.xiaomi.com/thumbnail/PNG/l114/AppStore/0a4e5f4d25ff24f2237ba83be3dd43205cbf1b5b4
+        apk_icon = apk_name = item_soup.find_all('img')[0].get('data-src')
+        apk_name = item_soup.find_all('h5')[0].get_text() #item_soup.find_all('a')[-2].get_text() #item_soup.find_all('h5')[0].get_text() ##apk_name = item_soup.find_all('img')[0].get('alt').encode('utf-8')
+        apk_webpage = "http://app.mi.com" + item_soup.find_all('a')[0].get('href')
+        apk_id = apk_webpage.split("/")[-1]
+        apk_url = get_apk_real_downloadurl(apk_id)
+        print apk_id, apk_name, apk_url, apk_webpage, apk_icon
+        apkstring = "%s|%s|%s|%s|%s" % (apk_id, apk_name, apk_url, apk_webpage, apk_icon)
 
+        append2file("apkinfo.txt", apkstring)
+        apklist.append(apkstring)
+    #print len(apklist)
+    return apklist
+
+
+
+def get_apk_real_downloadurl(apkid):
+    s = requests.session()
+    headers = {
+      "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language" : "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
+      "Accept-Encoding" : "gzip, deflate,sdch",
+      "Host" :  "app.mi.com",
+      "User-Agent" :  "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.111 Safari/537.36",
+      "Connection" : "keep-alive",
+      "Cache-Control" : "no-cache",
+    }
+    s.headers.update(headers)
+    resp = s.get("http://app.mi.com/download/"+str(apkid), timeout = 1000, allow_redirects=False)
+    content = resp.content
+    #print content
+    template = '<a href="(.*?)">here</a>'
+    real_url = re.compile(template)
+    real_url = re.search(real_url,content).group(1)
+    ##http://f5.market.mi-img.com/download/AppStore/044e54cd2ffb22f2f87baf3be3bd41255a543b33f/com.qiyi.video.apk
+    return real_url
 
 def downloadApk(apkid, apkfilename):
-  s = requests.session()
-  headers = {
-    "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language" : "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
-    "Accept-Encoding" : "gzip, deflate,sdch",
-    "Host" :  "app.mi.com",
-    "User-Agent" :  "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.111 Safari/537.36",
-    "Connection" : "keep-alive",
-    "Cache-Control" : "no-cache",
-  }
-  s.headers.update(headers)
-  s.headers['Host'] = 'app.mi.com'
-  resp = s.get('http://app.mi.com/download/'+str(apkid), timeout = 100, allow_redirects=False)
-  content = resp.content
-  print "Content:", content
-  template = '<a href="(.*?)">here</a>'
-  real_url = re.compile(template)
-  real_url = re.search(real_url,content).group(1)
-  print real_url
-  apkrealname = real_url[real_url.rfind('/')+1:]
-  apkrealname = urllib2.unquote(apkrealname)
-  s.headers['Host'] = 'f3.market.xiaomi.com'
-  resp = s.get(real_url,timeout = 100)
-  content = resp.content
-  with open(apkfilename,'wb+') as f:
-    f.write(content)
-  #
-  pass
+    s = requests.session()
+    headers = {
+      "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language" : "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
+      "Accept-Encoding" : "gzip, deflate,sdch",
+      "Host" :  "app.mi.com",
+      "User-Agent" :  "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.111 Safari/537.36",
+      "Connection" : "keep-alive",
+      "Cache-Control" : "no-cache",
+    }
+    s.headers.update(headers)
+    s.headers['Host'] = 'app.mi.com'
+    resp = s.get('http://app.mi.com/download/'+str(apkid), timeout = 100, allow_redirects=False)
+    content = resp.content
+    print "Content:", content
+    template = '<a href="(.*?)">here</a>'
+    real_url = re.compile(template)
+    real_url = re.search(real_url,content).group(1)
+    print real_url
+    apkrealname = real_url[real_url.rfind('/')+1:]
+    apkrealname = urllib2.unquote(apkrealname)
+    s.headers['Host'] = 'f3.market.xiaomi.com'
+    resp = s.get(real_url,timeout = 100)
+    content = resp.content
+    with open(apkfilename,'wb+') as f:
+      f.write(content)
+    #
+    pass
 
 
 
 if __name__ == "__main__":
   allapklist = []
-  for i in xrange(1,2):
-    weburl="http://app.mi.com/topList?page=%d" % i
-    apklist = fetchApkinfoFromWebpage(weburl)
-    allapklist.extend(apklist)
+  for i in xrange(1,43):
+      weburl="http://app.mi.com/topList?page=%d" % i
+      apklist = fetchApkinfoFromWebpage(weburl)
+      allapklist.extend(apklist)
   print len(allapklist)
 
-  downloadApk(125, "com.qiyi.video.apk")
+
+
+
+  #downloadApk(125, "com.qiyi.video.apk")
+  #print get_apk_real_downloadurl("http://app.mi.com/download/125")
+  #write2file("com.qiyi.video.apk", getURL("http://app.mi.com/download/125"))
