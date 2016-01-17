@@ -155,7 +155,7 @@ def getOneApkinfo(apk_name="com.tencent.mm"):
 	
 	#write2file("com.tencent.mm.apk", apk_download_url)
 	apkinfostring = "%s|%s|%s|%s|%s|%s|%s|%s" % (apk_name_en, apk_name_cn, apk_size, apk_downloadcount, apk_download_url, apk_icon, apk_all_versions, apk_catagory)
-	append2file("apkinfo", apkinfostring)
+	append2file("apkinfo.txt", apkinfostring)
 	print apkinfostring
 	return apkinfostring
 
