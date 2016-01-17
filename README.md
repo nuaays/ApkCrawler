@@ -60,7 +60,7 @@ LetvStore: http://www.letvstore.com/appIndex.html, http://www.letvstore.com/appC
 
 应用汇：http://www.appchina.com/category/30/1_1_1_1_0_0_0.html, http://www.appchina.com/category/40/1_1_1_1_0_0_0.html
 
-酷安网： http://www.coolapk.com/
+酷安网： http://www.coolapk.com/, http://www.coolapk.com/apk/?sort=down
 
 
 沙发网： http://app.shafa.com/hot， http://app.shafa.com/list/app?sort_by=downloads
