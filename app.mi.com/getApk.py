@@ -1,7 +1,7 @@
 #coding:utf-8
 
 import os, sys, time, random, json
-import requests, urllib2
+import re, requests, urllib2
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -95,11 +95,44 @@ def fetchApkinfoFromWebpage(weburl="http://app.mi.com/topList?page=1"):
  	return apklist
 
 
-if __name__ == "__main__":
-	allapklist = []
-	for i in xrange(1,43):
-		weburl="http://app.mi.com/topList?page=%d" % i
-		apklist = fetchApkinfoFromWebpage(weburl)
-		allapklist.extend(apklist)
-	print len(allapklist)
+def downloadApk(apkid, apkfilename):
+  s = requests.session()
+  headers = {
+    "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language" : "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
+    "Accept-Encoding" : "gzip, deflate,sdch",
+    "Host" :  "app.mi.com",
+    "User-Agent" :  "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.111 Safari/537.36",
+    "Connection" : "keep-alive",
+    "Cache-Control" : "no-cache",
+  }
+  s.headers.update(headers)
+  s.headers['Host'] = 'app.mi.com'
+  resp = s.get('http://app.mi.com/download/'+str(apkid), timeout = 100, allow_redirects=False)
+  content = resp.content
+  print "Content:", content
+  template = '<a href="(.*?)">here</a>'
+  real_url = re.compile(template)
+  real_url = re.search(real_url,content).group(1)
+  print real_url
+  apkrealname = real_url[real_url.rfind('/')+1:]
+  apkrealname = urllib2.unquote(apkrealname)
+  s.headers['Host'] = 'f3.market.xiaomi.com'
+  resp = s.get(real_url,timeout = 100)
+  content = resp.content
+  with open(apkfilename,'wb+') as f:
+    f.write(content)
+  #
+  pass
 
+
+
+if __name__ == "__main__":
+  allapklist = []
+  for i in xrange(1,2):
+    weburl="http://app.mi.com/topList?page=%d" % i
+    apklist = fetchApkinfoFromWebpage(weburl)
+    allapklist.extend(apklist)
+  print len(allapklist)
+
+  downloadApk(125, "com.qiyi.video.apk")
