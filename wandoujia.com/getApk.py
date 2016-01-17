@@ -163,7 +163,10 @@ def getOneApkinfo(apk_name="com.tencent.mm"):
 
 def getSubpageMaxnum(webpage="http://apps.wandoujia.com/tag/%E6%97%85%E8%A1%8C%C2%B7%E8%B4%AD%E7%A5%A8"):
 	print "[catagory]", webpage
-	return BeautifulSoup(getURLContent(webpage), from_encoding="utf-8").findAll('a',{'class':'page-item'})[-2].contents[0]
+	try:
+		return BeautifulSoup(getURLContent(webpage), from_encoding="utf-8").findAll('a',{'class':'page-item'})[-2].contents[0]
+	except Exception, e:
+		return 1
 
 def fetchApksNameFromOneWebpage(webpage="http://apps.wandoujia.com/tag/%E6%97%85%E8%A1%8C%C2%B7%E8%B4%AD%E7%A5%A8"):
 	apksname = []
@@ -207,6 +210,7 @@ if __name__ == "__main__":
 				'生活实用工具':'http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7'
 				}
 	#
+	apksname = []
 	allapkinformation = []
 	for key, value in catagory.items():
 		#print key, value
@@ -214,13 +218,12 @@ if __name__ == "__main__":
 		endnum = getSubpageMaxnum(value)
 		#print key, startnum, endnum
 		webpageurls = [ value+"?navType=app&pos=w/tag/appnav&page=%d" % num for num in xrange(1, int(endnum))]
-		apksname = []
 		for url in webpageurls:
 			print key, url
 			apksname.extend(fetchApksNameFromOneWebpage(url))
-		
-		for apkname in apksname:
-			allapkinformation.append(getOneApkinfo(apkname))
+	
+	for apkname in apksname:
+		allapkinformation.append(getOneApkinfo(apkname))
 		save2pkl(allapkinformation, "allapkinfo.pkl")
 
 
