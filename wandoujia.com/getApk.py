@@ -1,30 +1,42 @@
 #coding:utf-8
 
 import os, sys, time, random, json
-import requests, urllib2
+import re, requests, urllib2
+import pprint
+reload(sys)
+sys.setdefaultencoding('utf-8')
+from bs4 import BeautifulSoup
 
 # http://apps.wandoujia.com/,  2626288个软件
+# 下载总排行 http://apps.wandoujia.com/top/total?zh=0
 # 全部软件 http://apps.wandoujia.com/tag/%E5%85%A8%E9%83%A8%E8%BD%AF%E4%BB%B6
 # 全部游戏 http://apps.wandoujia.com/tag/%E5%85%A8%E9%83%A8%E6%B8%B8%E6%88%8F?pos=w/crumb/tag
 
 # 视频 http://apps.wandoujia.com/tag/%E8%A7%86%E9%A2%91?page=1
+# 视频·春晚 http://apps.wandoujia.com/tag/%E8%A7%86%E9%A2%91%C2%B7%E6%98%A5%E6%99%9A?page=1
 # 音乐 http://apps.wandoujia.com/tag/%E9%9F%B3%E4%B9%90?page=1
 # 图像 http://apps.wandoujia.com/tag/%E5%9B%BE%E5%83%8F?page=1
 # 购物 http://apps.wandoujia.com/tag/%E8%B4%AD%E7%89%A9?page=1
+# 购物·年货 http://apps.wandoujia.com/tag/%E8%B4%AD%E7%89%A9%C2%B7%E5%B9%B4%E8%B4%A7?page=1
 # 美化手机 http://apps.wandoujia.com/tag/%E7%BE%8E%E5%8C%96%E6%89%8B%E6%9C%BA?page=1
 # 聊天社交 http://apps.wandoujia.com/tag/%E8%81%8A%E5%A4%A9%E7%A4%BE%E4%BA%A4?page=1
 # 交通导航 http://apps.wandoujia.com/tag/%E4%BA%A4%E9%80%9A%E5%AF%BC%E8%88%AA?page=1
 # 运动健康 http://apps.wandoujia.com/tag/%E8%BF%90%E5%8A%A8%E5%81%A5%E5%BA%B7?page=1
 # 金融理财 http://apps.wandoujia.com/tag/%E9%87%91%E8%9E%8D%E7%90%86%E8%B4%A2?page=1
+# 理财·红包 http://apps.wandoujia.com/tag/%E7%90%86%E8%B4%A2%C2%B7%E7%BA%A2%E5%8C%85?page=1
 # 新闻阅读 http://apps.wandoujia.com/tag/%E6%96%B0%E9%97%BB%E9%98%85%E8%AF%BB?page=1
 # 系统工具 http://apps.wandoujia.com/tag/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E5%85%B7?page=1
 # 效率办公 http://apps.wandoujia.com/tag/%E6%95%88%E7%8E%87%E5%8A%9E%E5%85%AC?page=1
 # 电话通讯 http://apps.wandoujia.com/tag/%E7%94%B5%E8%AF%9D%E9%80%9A%E8%AE%AF?page=1
 # 旅游出行 http://apps.wandoujia.com/tag/%E6%97%85%E6%B8%B8%E5%87%BA%E8%A1%8C?page=1
+# 旅行·购票 http://apps.wandoujia.com/tag/%E6%97%85%E8%A1%8C%C2%B7%E8%B4%AD%E7%A5%A8?page=1
 # 生活服务 http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E6%9C%8D%E5%8A%A1?page=1
 # 教育培训 http://apps.wandoujia.com/tag/%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD?page=1
 # 丽人母婴 http://apps.wandoujia.com/tag/%E4%B8%BD%E4%BA%BA%E6%AF%8D%E5%A9%B4?page=1
 # 生活实用工具 http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7?page=1
+
+
+#http://apps.wandoujia.com/redirect?signature=72aaeb5&url=http%3A%2F%2Fapk.wandoujia.com%2Fc%2Ff7%2F6834fd9186188819aebebec09d517f7c.apk&pn=com.tencent.mm&md5=6834fd9186188819aebebec09d517f7c&apkid=17178194&vc=700&size=35705360&pos=t%2Fdetail#name=微信&icon=http://img.wdjimg.com/mms/icon/v1/7/ed/15891412e00a12fdec0bbe290b42ced7_68_68.png&content-type=application
 
 
 
@@ -38,13 +50,13 @@ USER_AGENTS = (
     'Opera/9.80 (X11; U; Linux i686; en-US; rv:1.9.2.3) Presto/2.2.15 Version/10.10'
 )
 
-def getURLContent(url='http://zhushou.360.cn/detail/index/soft_id/77208'):
+def getURLContent(url='http://apps.wandoujia.com/apps/com.tencent.mm'):
     headers = {
                'Accept-Language': 'en-US,en;q=0.5',
                'Accept-Encoding': 'gzip, deflate', 
                'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                'Connection' : 'keep-alive',
-               'Referer' : 'http://zhushou.360.cn/detail/index/soft_id/77208'        
+               'Referer' : 'http://apps.wandoujia.com'        
                }
 
     headers['User-Agent'] = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0" #USER_AGENTS[random.randint(0, len(USER_AGENTS)-1)]
@@ -56,17 +68,17 @@ def getURLContent(url='http://zhushou.360.cn/detail/index/soft_id/77208'):
         print e
         return None
     else:
-    	print r.encoding
+        print r.encoding
         return r.content
 
-def getURL(url='http://zhushou.360.cn/list/index/cid/1/'):
+def getURL(url='http://apps.wandoujia.com/apps/com.tencent.mm'):
     print "[Download]%s" % url
     headers = {
                'Accept-Language': 'en-US,en;q=0.5',
                'Accept-Encoding': 'gzip, deflate', 
                'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                'Connection' : 'keep-alive',
-               'Referer' : 'http://zhushou.360.cn/detail/index/soft_id/77208'        
+               'Referer' : 'http://apps.wandoujia.com'        
                }
     headers['User-Agent'] = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0"
 
@@ -88,7 +100,7 @@ def write2file(filename, requestshandle):
             fp.write(requestshandle.content)
 
 def append2file(filename, string):
-	with open(filename, "a+") as fp:
+    with open(filename, "a+") as fp:
             fp.write(string)
             fp.write("\n")
 
@@ -202,27 +214,51 @@ def getApksFromOneWebPage(pageurl="http://zhushou.360.cn/list/index/cid/1", cata
 
 
 
+def get_apk_real_downloadurl(apk_name_en="com.tencent.mm"):
+    apkurl_prefix = "http://apps.wandoujia.com/apps/"
+    s = requests.session()
+    headers = {
+      "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language" : "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3",
+      "Accept-Encoding" : "gzip, deflate,sdch",
+      "Host" :  "apk.wandoujia.com",
+      "User-Agent" :  "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.111 Safari/537.36",
+      "Connection" : "keep-alive",
+      "Cache-Control" : "no-cache",
+    }
+    s.headers.update(headers)
+    resp = s.get(apkurl_prefix+str(apk_name_en), timeout = 1000, allow_redirects=False)
+    content = resp.content
+    #print content
+    template = '<a href="(.*?)">here</a>'
+    real_url = re.compile(template)
+    real_url = re.search(real_url,content).group(1)
+    ##http://f5.market.mi-img.com/download/AppStore/044e54cd2ffb22f2f87baf3be3bd41255a543b33f/com.qiyi.video.apk
+    return real_url
+
 
 if __name__ == "__main__":
-	zhoushou360 ={"全部":1, "系统安全":11,"通讯社交":12,"影音视听":14,"新闻阅读":15,"生活休闲":16,"主题壁纸":18,"办公商务":17,"摄影摄像":102228,"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
-	#zhoushou360 ={"购物优惠":102230,"地图旅游":102231,"教育学习":102232,"金融理财":102139,"健康医疗":102233}
-	#"摄影摄像":102228,
+	weburl="http://apps.wandoujia.com/apps/com.tencent.mm"
+	html_doc = getURLContent(weburl)
+	#print html_doc
+	soup = BeautifulSoup(html_doc, from_encoding="utf-8") 
+	downloadcount = soup.findAll(attrs={"class":"num-list"})[0].findAll("span", {"class":"item"})[0].i.contents[0]
+	print type(downloadcount), downloadcount
+
+	apk_icon = soup.findAll(attrs={"class":"main-info"})[0].findAll(attrs={"class":"icon"})[0].img.get('src')
+	apk_name_cn = soup.findAll(attrs={"class":"main-info"})[0].findAll(attrs={"class":"icon"})[0].img.get('alt')
+	print apk_name_cn
+	apk_download_href = soup.findAll(attrs={"class":"main-info"})[0].findAll(attrs={"class":"btn-download btn-green install-btn"})[-1].get('href')
+
+	apk_download_url = apk_download_href.split("&pn=")[0]
+	write2file("com.tencent.mm.apk", apk_download_url)
+	# for item in apk_download_href.split('amp'):
+	# 	print item
+	#print soup.find_all('num-list')
+
+	#http://180.97.171.41/m.wdjcdn.com/apk.wdjcdn.com/c/f7/6834fd9186188819aebebec09d517f7c.apk#name=微信&icon=http://img.wdjimg.com/mms/icon/v1/7/ed/15891412e00a12fdec0bbe290b42ced7_68_68.png&content-type=application
 
 
-	app_info_dict_summary = {}
-
-	for catagorynum in zhoushou360.values():
-		print catagorynum
-
-		url_pattern = "http://zhushou.360.cn/list/index/cid/%d/?page=%d"
-		for webpagenum in xrange(1,51):
-			webpageurl = url_pattern % (catagorynum ,webpagenum)
-			print webpageurl
-			app_infodict = getApksFromOneWebPage(webpageurl, catagorynum)
-			app_info_dict_summary = dict(app_info_dict_summary)
-			app_info_dict_summary.update(app_infodict)
-			print len(app_info_dict_summary)
 
 
 
- 
