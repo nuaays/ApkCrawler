@@ -207,7 +207,7 @@ if __name__ == "__main__":
 				'生活服务':'http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E6%9C%8D%E5%8A%A1',
 				'教育培训':'http://apps.wandoujia.com/tag/%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD',
 				'丽人母婴':'http://apps.wandoujia.com/tag/%E4%B8%BD%E4%BA%BA%E6%AF%8D%E5%A9%B4',
-				'生活实用工具':'http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7'
+				#'生活实用工具':'http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7'
 				}
 	#
 	apksname = []
@@ -220,8 +220,18 @@ if __name__ == "__main__":
 		webpageurls = [ value+"?navType=app&pos=w/tag/appnav&page=%d" % num for num in xrange(1, int(endnum))]
 		for url in webpageurls:
 			print key, url
-			apksname.extend(fetchApksNameFromOneWebpage(url))
-	
+			try:
+				apks = fetchApksNameFromOneWebpage(url)
+				apksname.extend(apks)
+			except Exception, e:
+				print e
+			else:
+				with open("apknamelist.txt","a+") as fh:
+					for apk in apks:
+						fh.write(apk)
+						fh.write("\r")
+					fh.flush()
+
 	for apkname in apksname:
 		allapkinformation.append(getOneApkinfo(apkname))
 		save2pkl(allapkinformation, "allapkinfo.pkl")
