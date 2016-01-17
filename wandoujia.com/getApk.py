@@ -2,6 +2,7 @@
 
 import os, sys, time, random, json
 import re, requests, urllib2
+requests.adapters.DEFAULT_RETRIES = 8
 import pprint
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -133,11 +134,16 @@ def get_apk_real_downloadurl(apkurl):
     #print "XXX:", resp.status_code #302
     #print "XXX:", resp.headers.get("Location")
     #http://180.97.171.41/m.wdjcdn.com/apk.wdjcdn.com/c/f7/6834fd9186188819aebebec09d517f7c.
-    return resp.headers.get("Location")
+    localtion = resp.headers.get("Location")
+    print "Localtion:", localtion
+    if localtion.startswith("/c"):
+    	localtion = "http://180.97.171.41/m.wdjcdn.com/apk.wdjcdn.com" + localtion
+    return localtion
 
 
 def getOneApkinfo(apk_name="com.tencent.mm"):
 	apk_weburl="http://apps.wandoujia.com/apps/" + apk_name
+	print "[APK]", apk_weburl
 	#apk_weburl="http://apps.wandoujia.com/apps/com.tencent.mm"
 	apk_all_versions = apk_weburl + "/versions"
 	#
@@ -183,57 +189,60 @@ def fetchApksNameFromOneWebpage(webpage="http://apps.wandoujia.com/tag/%E6%97%85
 
 
 if __name__ == "__main__":
-	apknamelist = fetchApksNameFromOneWebpage("http://apps.wandoujia.com/tag/%E5%85%A8%E9%83%A8%E8%BD%AF%E4%BB%B6")
-	print len(apknamelist)
+	#apknamelist = fetchApksNameFromOneWebpage("http://apps.wandoujia.com/tag/%E5%85%A8%E9%83%A8%E8%BD%AF%E4%BB%B6")
+	#print len(apknamelist)
 
-	catagory = {#'视频':'http://apps.wandoujia.com/tag/%E8%A7%86%E9%A2%91',
+	catagory = {'视频':'http://apps.wandoujia.com/tag/%E8%A7%86%E9%A2%91',
 				'视频·春晚':'http://apps.wandoujia.com/tag/%E8%A7%86%E9%A2%91%C2%B7%E6%98%A5%E6%99%9A',
 				'音乐':'http://apps.wandoujia.com/tag/%E9%9F%B3%E4%B9%90',
 				'图像':'http://apps.wandoujia.com/tag/%E5%9B%BE%E5%83%8F',
-				#'购物':'http://apps.wandoujia.com/tag/%E8%B4%AD%E7%89%A9',
+				'购物':'http://apps.wandoujia.com/tag/%E8%B4%AD%E7%89%A9',
 				'购物·年货':'http://apps.wandoujia.com/tag/%E8%B4%AD%E7%89%A9%C2%B7%E5%B9%B4%E8%B4%A7',
 				'美化手机':'http://apps.wandoujia.com/tag/%E7%BE%8E%E5%8C%96%E6%89%8B%E6%9C%BA',
 				'聊天社交':'http://apps.wandoujia.com/tag/%E8%81%8A%E5%A4%A9%E7%A4%BE%E4%BA%A4',
 				'交通导航':'http://apps.wandoujia.com/tag/%E4%BA%A4%E9%80%9A%E5%AF%BC%E8%88%AA',
 				'运动健康':'http://apps.wandoujia.com/tag/%E8%BF%90%E5%8A%A8%E5%81%A5%E5%BA%B7',
-				#'金融理财':'http://apps.wandoujia.com/tag/%E9%87%91%E8%9E%8D%E7%90%86%E8%B4%A2',
+				'金融理财':'http://apps.wandoujia.com/tag/%E9%87%91%E8%9E%8D%E7%90%86%E8%B4%A2',
 				'理财·红包':'http://apps.wandoujia.com/tag/%E7%90%86%E8%B4%A2%C2%B7%E7%BA%A2%E5%8C%85',
 				'新闻阅读':'http://apps.wandoujia.com/tag/%E6%96%B0%E9%97%BB%E9%98%85%E8%AF%BB',
 				'系统工具':'http://apps.wandoujia.com/tag/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E5%85%B7',
 				'效率办公':'http://apps.wandoujia.com/tag/%E6%95%88%E7%8E%87%E5%8A%9E%E5%85%AC',
 				'电话通讯':'http://apps.wandoujia.com/tag/%E7%94%B5%E8%AF%9D%E9%80%9A%E8%AE%AF',
-				#'旅游出行':'http://apps.wandoujia.com/tag/%E6%97%85%E6%B8%B8%E5%87%BA%E8%A1%8C',
+				'旅游出行':'http://apps.wandoujia.com/tag/%E6%97%85%E6%B8%B8%E5%87%BA%E8%A1%8C',
 				'旅行·购票':'http://apps.wandoujia.com/tag/%E6%97%85%E8%A1%8C%C2%B7%E8%B4%AD%E7%A5%A8',
 				'生活服务':'http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E6%9C%8D%E5%8A%A1',
 				'教育培训':'http://apps.wandoujia.com/tag/%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD',
 				'丽人母婴':'http://apps.wandoujia.com/tag/%E4%B8%BD%E4%BA%BA%E6%AF%8D%E5%A9%B4',
-				#'生活实用工具':'http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7'
+				'生活实用工具':'http://apps.wandoujia.com/tag/%E7%94%9F%E6%B4%BB%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7'
 				}
 	#
 	apksname = []
 	allapkinformation = []
-	for key, value in catagory.items():
-		#print key, value
-		startnum=1
-		endnum = getSubpageMaxnum(value)
-		#print key, startnum, endnum
-		webpageurls = [ value+"?navType=app&pos=w/tag/appnav&page=%d" % num for num in xrange(1, int(endnum))]
-		for url in webpageurls:
-			print key, url
-			try:
-				apks = fetchApksNameFromOneWebpage(url)
-				apksname.extend(apks)
-			except Exception, e:
-				print e
-			else:
-				with open("apknamelist.txt","a+") as fh:
-					for apk in apks:
-						fh.write(apk)
-						fh.write("\r")
-					fh.flush()
-
+	# for key, value in catagory.items():
+	# 	#print key, value
+	# 	startnum=1
+	# 	endnum = getSubpageMaxnum(value)
+	# 	#print key, startnum, endnum
+	# 	webpageurls = [ value+"?navType=app&pos=w/tag/appnav&page=%d" % num for num in xrange(1, int(endnum))]
+	# 	for url in webpageurls:
+	# 		print key, url
+	# 		try:
+	# 			apks = fetchApksNameFromOneWebpage(url)
+	# 			apksname.extend(apks)
+	# 		except Exception, e:
+	# 			print e
+	# 		else:
+	# 			with open("apknamelist.txt","a+") as fh:
+	# 				for apk in apks:
+	# 					fh.write(apk)
+	# 					fh.write("\r")
+	# 				fh.flush()
+	# apksname=list(set(apksname))
+	apksname = open("apknamelist.txt").read().split("\r")
 	for apkname in apksname:
+		print apkname
 		allapkinformation.append(getOneApkinfo(apkname))
+		time.sleep(1)
 		save2pkl(allapkinformation, "allapkinfo.pkl")
 
 
