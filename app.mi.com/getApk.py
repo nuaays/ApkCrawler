@@ -86,13 +86,14 @@ def fetchApkinfoFromWebpage(weburl="http://app.mi.com/topList?page=1"):
         #http://file.market.xiaomi.com/thumbnail/PNG/l62/AppStore/0a4e5f4d25ff24f2237ba83be3dd43205cbf1b5b4
         #http://file.market.xiaomi.com/thumbnail/PNG/l114/AppStore/0a4e5f4d25ff24f2237ba83be3dd43205cbf1b5b4
         apk_icon = apk_name = item_soup.find_all('img')[0].get('data-src')
-        apk_name = item_soup.find_all('h5')[0].get_text() #item_soup.find_all('a')[-2].get_text() #item_soup.find_all('h5')[0].get_text() ##apk_name = item_soup.find_all('img')[0].get('alt').encode('utf-8')
+        apk_name_cn = item_soup.find_all('h5')[0].get_text() #item_soup.find_all('a')[-2].get_text() #item_soup.find_all('h5')[0].get_text() ##apk_name = item_soup.find_all('img')[0].get('alt').encode('utf-8')
         apk_webpage = "http://app.mi.com" + item_soup.find_all('a')[0].get('href')
         apk_id = apk_webpage.split("/")[-1]
         apk_url = get_apk_real_downloadurl(apk_id)
-        print apk_id, apk_name, apk_url, apk_webpage, apk_icon
-        apkstring = "%s|%s|%s|%s|%s" % (apk_id, apk_name, apk_url, apk_webpage, apk_icon)
-
+        #apk_name_en = BeautifulSoup(getURLContent(apk_webpage)).findAll(attrs={"class":"special-li"})[0].get_text()
+        apk_name_en = apk_url.split("/")[-1].replace(".apk","")
+        print apk_id, apk_name_en, apk_name_cn, apk_url, apk_webpage, apk_icon
+        apkstring = "%s|%s|%s|%s|%s|%s" % (apk_id, apk_name_en, apk_name_cn, apk_url, apk_webpage, apk_icon)
         append2file("apkinfo.txt", apkstring)
         apklist.append(apkstring)
     #print len(apklist)
@@ -101,6 +102,7 @@ def fetchApkinfoFromWebpage(weburl="http://app.mi.com/topList?page=1"):
 
 
 def get_apk_real_downloadurl(apkid):
+    apkurl_prefix = "http://app.mi.com/download/"
     s = requests.session()
     headers = {
       "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -112,7 +114,7 @@ def get_apk_real_downloadurl(apkid):
       "Cache-Control" : "no-cache",
     }
     s.headers.update(headers)
-    resp = s.get("http://app.mi.com/download/"+str(apkid), timeout = 1000, allow_redirects=False)
+    resp = s.get(apkurl_prefix+str(apkid), timeout = 1000, allow_redirects=False)
     content = resp.content
     #print content
     template = '<a href="(.*?)">here</a>'
@@ -120,6 +122,7 @@ def get_apk_real_downloadurl(apkid):
     real_url = re.search(real_url,content).group(1)
     ##http://f5.market.mi-img.com/download/AppStore/044e54cd2ffb22f2f87baf3be3bd41255a543b33f/com.qiyi.video.apk
     return real_url
+
 
 def downloadApk(apkid, apkfilename):
     s = requests.session()
@@ -136,11 +139,11 @@ def downloadApk(apkid, apkfilename):
     s.headers['Host'] = 'app.mi.com'
     resp = s.get('http://app.mi.com/download/'+str(apkid), timeout = 100, allow_redirects=False)
     content = resp.content
-    print "Content:", content
+    #print "Content:", content
     template = '<a href="(.*?)">here</a>'
     real_url = re.compile(template)
     real_url = re.search(real_url,content).group(1)
-    print real_url
+    #print real_url
     apkrealname = real_url[real_url.rfind('/')+1:]
     apkrealname = urllib2.unquote(apkrealname)
     s.headers['Host'] = 'f3.market.xiaomi.com'
@@ -155,15 +158,21 @@ def downloadApk(apkid, apkfilename):
 
 if __name__ == "__main__":
   allapklist = []
-  for i in xrange(1,43):
-      weburl="http://app.mi.com/topList?page=%d" % i
+  gameswebpage = "http://app.mi.com/gTopList"
+  appswebpages = ["http://app.mi.com/topList?page=%d" % i for i in xrange(1,43)]
+  appswebpages.insert(0, gameswebpage)
+
+  for weburl in appswebpages:
       apklist = fetchApkinfoFromWebpage(weburl)
       allapklist.extend(apklist)
   print len(allapklist)
 
 
-
-
   #downloadApk(125, "com.qiyi.video.apk")
   #print get_apk_real_downloadurl("http://app.mi.com/download/125")
   #write2file("com.qiyi.video.apk", getURL("http://app.mi.com/download/125"))
+  
+  #print BeautifulSoup(getURLContent("http://app.mi.com/detail/125"), from_encoding="utf-8").findAll(attrs={"class":"special-li"})[0].get_text()
+
+
+
